@@ -6,22 +6,15 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
 } from "recharts";
 
-export const SensorChart = () => {
-  const [data, setData] = useState([
-    { name: "", uv: 400, pv: 2400, amt: 2400 },
-    { name: "", uv: 500, pv: 2400, amt: 2400 },
-    { name: "", uv: 600, pv: 2400, amt: 2400 },
-  ]);
+import { useSensorReading } from "../hooks/useSensorReading";
 
-  useEffect(() => {
-    setInterval(() => {
-      setData([...data, { name: "", uv: 400, pv: 2400, amt: 2400 }]);
-    }, 1000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+export const SensorChart = ({ sensor_id }) => {
+  const query = useSensorReading({ sensor_id, limit: 100 });
+  // console.log("query.data:", query.data);
+
+  const data = query.data?.result || [];
 
   return (
     <LineChart
@@ -30,9 +23,14 @@ export const SensorChart = () => {
       data={data}
       margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
     >
-      <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+      <Line
+        type="monotone"
+        dataKey="value"
+        stroke="#8884d8"
+        isAnimationActive={false}
+      />
       <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-      <XAxis dataKey="name" />
+      <XAxis dataKey="created_at" />
       <YAxis />
       <Tooltip />
     </LineChart>
