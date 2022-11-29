@@ -2,7 +2,7 @@ import { Logo } from "@components/Logo";
 import { Layout } from "@ui/layout";
 import { H2 } from "@ui/typography/Heading";
 import { useRouter } from "next/router";
-
+import { customToast } from "@src/components/Toast";
 import dynamic from "next/dynamic";
 
 const SensorChart = dynamic(
@@ -12,6 +12,14 @@ const SensorChart = dynamic(
 
 const SensorPage = () => {
   const sensor_id = useRouter().query.sensor_id as string;
+
+  const triggerNotification = () => {
+    customToast({
+      title: "CO2 Alert",
+      subtitle:
+        "The CO2 level in this room is raising. You may want to take a break in 10 minutes.",
+    });
+  };
 
   return (
     <Layout className="flex-col items-center justify-center">
@@ -26,6 +34,12 @@ const SensorPage = () => {
           <SensorChart sensor_id={sensor_id} />
         </div>
       </div>
+      <button
+        className="w-full cursor-default text-center"
+        onClick={triggerNotification}
+      >
+        –––
+      </button>
     </Layout>
   );
 };
