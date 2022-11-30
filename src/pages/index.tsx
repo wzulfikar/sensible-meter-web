@@ -5,18 +5,47 @@ import { H1 } from "@ui/typography/Heading";
 import { Logo } from "@components/Logo";
 import { Button } from "@src/ui/design/Button";
 import { useRouter } from "next/router";
+import { API_ENDPOINT } from "@src/config";
+import toast from "react-hot-toast";
 
 const Home: NextPage = () => {
   const router = useRouter();
 
   const handleNewSession = () => {
-    const numPeople = prompt("How many people in the room?") || "1";
+    const sensor_id = 1;
+    const num_people = prompt("How many people in the room?") || "1";
 
-    // timeout to simulate fetch
-    setTimeout(() => {
-      // We'll use sensor 1 for demo so we'll hardcode it here
-      router.push(`/sensors/1?session_id=1&numPeople=${parseInt(numPeople)}`);
-    }, 1000);
+    toast.promise(
+      fetch(API_ENDPOINT + "/api/v1/session/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sensor_id,
+          num_people,
+          location: "Helsinki",
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const session_id = data?.session_id;
+          if (session_id) {
+            alert("Could not initiate session");
+          } else {
+            router.push(
+              `/sensors/1?session_id=${session_id}&num_people=${parseInt(
+                num_people
+              )}`
+            );
+          }
+        }),
+      {
+        loading: "Registering session...",
+        success: <b>Redirecting..</b>,
+        error: <b>Could not start session</b>,
+      }
+    );
   };
 
   return (
