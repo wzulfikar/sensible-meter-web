@@ -23,7 +23,7 @@ const SessionPage = () => {
   const session_id = router.query.session_id as string;
 
   const result = useSessionData({ session_id });
-  const futureCo2 = 0; // result.data?.estimation.slice(-1)[0];
+  const futureCo2 = result.data?.estimation.slice(-1)[0];
 
   console.log("result:", result);
 
