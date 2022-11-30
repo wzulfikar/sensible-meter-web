@@ -11,12 +11,12 @@ export const useSessionData = ({ session_id }) => {
         return {} as any;
       }
 
-      // const result = await fetch(
-      //   API_ENDPOINT + `/api/v1/session/get_session?session_id=${session_id}`
-      // ).then(res => res.json());
+      const result = await fetch(
+        API_ENDPOINT + `/api/v1/session/get_session?session_id=${session_id}`
+      ).then(res => res.json());
 
       // Uncomment to use fixture
-      const result = await import("../../fixtures/get_session.json")
+      // const result = await import("../../fixtures/get_session.json")
 
       const data = result?.session_data;
       if (!data) {
