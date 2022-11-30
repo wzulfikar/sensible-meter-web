@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -6,10 +5,15 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  LabelList,
 } from "recharts";
 
 import { useSensorReading } from "../hooks/useSensorReading";
+
+function convertUTCDateToLocalDate(date) {
+  const newDate = new Date(date);
+  newDate.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+  return newDate;
+}
 
 export const SensorChart = ({ sensor_id }) => {
   const query = useSensorReading({ sensor_id, limit: 100 });
@@ -19,11 +23,10 @@ export const SensorChart = ({ sensor_id }) => {
 
   data.forEach((item, i) => {
     // Extract hh:mm from created_at. (from `2022-11-30T10:26:26.913398` to `10:26`)
-    data[i].created_at_short = item.created_at
-      .split("T")[1]
-      .split(":")
-      .splice(0, 2)
-      .join(":");
+    const localTime = convertUTCDateToLocalDate(
+      new Date(item.created_at)
+    ).toLocaleString();
+    data[i].created_at_short = localTime.split(", ")?.[1]?.substr(0, 5);
   });
 
   return (
