@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -6,6 +6,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  LabelList,
 } from "recharts";
 
 import { useSensorReading } from "../hooks/useSensorReading";
@@ -15,6 +16,15 @@ export const SensorChart = ({ sensor_id }) => {
   // console.log("query.data:", query.data);
 
   const data = query.data?.result || [];
+
+  data.forEach((item, i) => {
+    // Extract hh:mm from created_at. (from `2022-11-30T10:26:26.913398` to `10:26`)
+    data[i].created_at_short = item.created_at
+      .split("T")[1]
+      .split(":")
+      .splice(0, 2)
+      .join(":");
+  });
 
   return (
     <LineChart
@@ -30,7 +40,7 @@ export const SensorChart = ({ sensor_id }) => {
         isAnimationActive={false}
       />
       <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-      <XAxis dataKey="created_at" />
+      <XAxis dataKey="created_at_short" />
       <YAxis />
       <Tooltip />
     </LineChart>
