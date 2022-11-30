@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { Button } from "@src/ui/design/Button";
 import toast from "react-hot-toast";
 import { useEstimator } from "@src/hooks/useEstimator";
+import { useEffect } from "react";
 
 const SensorChart = dynamic(
   async () => (await import("@components/SensorChart")).SensorChart,
@@ -25,10 +26,18 @@ const SensorPage = () => {
   console.log("session_id:", session_id);
   console.log("futureCo2:", futureCo2);
 
-  // useEffect(() => {
-  //   // --tw-gradient-from
-  //   rgb(46 2 109)
-  // }, [futureCo2])
+  useEffect(() => {
+    if (!futureCo2) return;
+
+    const initialColor = 46; // From rgb value
+    let newColor = futureCo2 / 2 + initialColor;
+    if (newColor > 255) {
+      newColor = 255;
+    }
+    console.log("newColor:", newColor);
+    const mainEl = document.querySelector("main") as HTMLDivElement;
+    mainEl.style.setProperty("--tw-gradient-from", `rgb(${newColor}, 2,109)`);
+  }, [futureCo2]);
 
   const triggerNotification = () => {
     customToast({
@@ -76,9 +85,8 @@ const SensorPage = () => {
         <Button onClick={handleStopSession}>Stop Session</Button>
       </div>
       <p className="pt-4 text-sm text-gray-300">
-        {futureCo2
-          ? `Estimated CO2 in next 10 minutes: ${futureCo2.toFixed(1)}`
-          : ""}
+        Estimated CO2 in next 10 minutes:
+        {futureCo2 ? futureCo2.toFixed(1) : " ..."}
       </p>
     </Layout>
   );
