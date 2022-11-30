@@ -6,7 +6,6 @@ import { onError } from "@apollo/client/link/error"
 const graphqlEndpoint = "https://exciting-pigeon-44.hasura.app/v1/graphql";
 const wsEndpoint = graphqlEndpoint.replace("https://", "wss://");
 
-
 // Create an http link:
 const httpLink = new HttpLink({
   uri: graphqlEndpoint,
