@@ -17,6 +17,7 @@ const SensorChart = dynamic(
 const SensorPage = () => {
   const router = useRouter();
   const sensor_id = router.query.sensor_id as string;
+  const numPeople = (router.query.numPeople as string) || "1";
 
   const session_id = (router.query.session_id || "1") as string;
 
@@ -68,7 +69,9 @@ const SensorPage = () => {
         </H2>
       </div>
       <h1 className="pb-2 text-white">
-        <strong>Sensor {sensor_id} </strong>
+        <strong>
+          Sensor #{sensor_id}. Count people: {numPeople}
+        </strong>
       </h1>
       <div className="container flex flex-col items-center justify-center gap-12 bg-gray-200 px-4 py-16">
         <div>

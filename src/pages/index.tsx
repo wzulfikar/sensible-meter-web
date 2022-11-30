@@ -5,28 +5,17 @@ import { H1 } from "@ui/typography/Heading";
 import { Logo } from "@components/Logo";
 import { Button } from "@src/ui/design/Button";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
 
 const Home: NextPage = () => {
   const router = useRouter();
 
   const handleNewSession = () => {
-    // TODO: send api to create new session
-    console.log("new");
-
-    // toast.promise(
-    //   saveSettings(settings),
-    //    {
-    //      loading: 'Creating session...',
-    //      success: <b>Redirecting..</b>,
-    //      error: <b>Could not create session</b>,
-    //    }
-    //  );
+    const numPeople = prompt("How many people in the room?") || "1";
 
     // timeout to simulate fetch
     setTimeout(() => {
       // We'll use sensor 1 for demo so we'll hardcode it here
-      router.push("/sensors/1");
+      router.push(`/sensors/1?session_id=1&numPeople=${parseInt(numPeople)}`);
     }, 1000);
   };
 
