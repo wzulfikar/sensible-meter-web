@@ -12,8 +12,8 @@ const Home: NextPage = () => {
   const router = useRouter();
 
   const handleNewSession = () => {
-    const sensor_id = 1;
     const num_people = prompt("How many people in the room?") || "1";
+    const sensor_id = prompt("Which sensor id (1 or 2)?") || "1";
 
     toast.promise(
       fetch(API_ENDPOINT + "/api/v1/session/register", {
@@ -31,11 +31,7 @@ const Home: NextPage = () => {
         .then((data) => {
           const session_id = data?.session_id;
           if (session_id) {
-            router.push(
-              `/sensors/1?session_id=${session_id}&num_people=${parseInt(
-                num_people
-              )}`
-            );
+            router.push(`/sessions/${session_id}`);
           } else {
             alert("Could not initiate session");
           }

@@ -6,7 +6,7 @@ import { customToast } from "@src/components/Toast";
 import dynamic from "next/dynamic";
 import { Button } from "@src/ui/design/Button";
 import toast from "react-hot-toast";
-import { useEstimator } from "@src/hooks/useEstimator";
+import { useSessionData } from "@src/hooks/useSessionData";
 import { useEffect } from "react";
 import { API_ENDPOINT } from "@src/config";
 
@@ -15,15 +15,17 @@ const SensorChart = dynamic(
   { ssr: false }
 );
 
-const SensorPage = () => {
+const SessionPage = () => {
   const router = useRouter();
   const sensor_id = router.query.sensor_id as string;
   const num_people = router.query.num_people as string;
 
   const session_id = router.query.session_id as string;
 
-  const result = useEstimator({ session_id });
-  const futureCo2 = result.data?.slice(-1)[0];
+  const result = useSessionData({ session_id });
+  const futureCo2 = 0; // result.data?.estimation.slice(-1)[0];
+
+  console.log("result:", result);
 
   console.log("session_id:", session_id);
   console.log("futureCo2:", futureCo2);
@@ -116,4 +118,4 @@ const SensorPage = () => {
   );
 };
 
-export default SensorPage;
+export default SessionPage;
