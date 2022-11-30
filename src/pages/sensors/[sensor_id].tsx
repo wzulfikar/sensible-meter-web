@@ -17,9 +17,9 @@ const SensorChart = dynamic(
 const SensorPage = () => {
   const router = useRouter();
   const sensor_id = router.query.sensor_id as string;
-  const num_people = (router.query.num_people as string) || "1";
+  const num_people = router.query.num_people as string;
 
-  const session_id = (router.query.session_id || "1") as string;
+  const session_id = router.query.session_id as string;
 
   const result = useEstimator({ session_id });
   const futureCo2 = result.data?.slice(-1)[0];
@@ -70,7 +70,7 @@ const SensorPage = () => {
       </div>
       <h1 className="pb-2 text-white">
         <strong>
-          Sensor #{sensor_id}. Count people: {num_people}
+          Sensor #{sensor_id}. {num_people ? `Count people: ${num_people}` : ""}
         </strong>
       </h1>
       <div className="container flex flex-col items-center justify-center gap-12 bg-gray-200 px-4 py-16">
@@ -84,13 +84,17 @@ const SensorPage = () => {
       >
         –––
       </button>
-      <div className="flex flex-col items-center justify-center gap-4">
-        <Button onClick={handleStopSession}>Stop Session</Button>
-      </div>
-      <p className="pt-4 text-sm text-gray-300">
-        Estimated CO2 in next 10 minutes:
-        {futureCo2 ? futureCo2.toFixed(1) : " ..."}
-      </p>
+      {session_id ? (
+        <>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <Button onClick={handleStopSession}>Stop Session</Button>
+          </div>
+          <p className="pt-4 text-sm text-gray-300">
+            Estimated CO2 in next 10 minutes:
+            {futureCo2 ? futureCo2.toFixed(1) : " ..."}
+          </p>
+        </>
+      ) : null}
     </Layout>
   );
 };
