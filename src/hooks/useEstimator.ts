@@ -13,7 +13,12 @@ export const useEstimator = ({ session_id }) => {
       // Uncomment to use fixture
       // const result = await import("../../fixtures/get_session.json")
 
-      return result?.session_data?.estimation;
+      const estimation = result?.session_data?.estimation;
+      if (!estimation) {
+        console.log("[WARN] no estimation found. session_id:", session_id)
+      }
+
+      return estimation || [];
     },
     { refetchInterval: 5000 }
   );

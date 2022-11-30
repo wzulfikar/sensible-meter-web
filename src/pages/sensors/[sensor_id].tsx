@@ -17,8 +17,12 @@ const SensorPage = () => {
   const router = useRouter();
   const sensor_id = router.query.sensor_id as string;
 
-  const result = useEstimator({ session_id: 1 });
+  const session_id = (router.query.session_id || "1") as string;
+
+  const result = useEstimator({ session_id });
   const futureCo2 = result.data?.slice(-1)[0];
+
+  console.log("session_id:", session_id);
   console.log("futureCo2:", futureCo2);
 
   // useEffect(() => {
