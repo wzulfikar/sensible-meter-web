@@ -5,6 +5,8 @@ export const useEstimator = ({ session_id }) => {
   return useQuery(
     ['sessions', session_id],
     async () => {
+      if (!session_id) return [];
+
       const result = await fetch(
         API_ENDPOINT + `/api/v1/session/get_session?session_id=${session_id}`
       ).then(res => res.json());
