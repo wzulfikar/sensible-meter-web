@@ -31,13 +31,13 @@ const Home: NextPage = () => {
         .then((data) => {
           const session_id = data?.session_id;
           if (session_id) {
-            alert("Could not initiate session");
-          } else {
             router.push(
               `/sensors/1?session_id=${session_id}&num_people=${parseInt(
                 num_people
               )}`
             );
+          } else {
+            alert("Could not initiate session");
           }
         }),
       {
