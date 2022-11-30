@@ -1,12 +1,35 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
 import { Layout } from "@ui/layout";
 import { H1 } from "@ui/typography/Heading";
-import { trpc } from "../utils/trpc";
 import { Logo } from "@components/Logo";
+import { Button } from "@src/ui/design/Button";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 const Home: NextPage = () => {
+  const router = useRouter();
+
+  const handleNewSession = () => {
+    // TODO: send api to create new session
+    console.log("new");
+
+    // toast.promise(
+    //   saveSettings(settings),
+    //    {
+    //      loading: 'Creating session...',
+    //      success: <b>Redirecting..</b>,
+    //      error: <b>Could not create session</b>,
+    //    }
+    //  );
+
+    // timeout to simulate fetch
+    setTimeout(() => {
+      // We'll use sensor 1 for demo so we'll hardcode it here
+      router.push("/sensors/1");
+    }, 1000);
+  };
+
   return (
     <Layout className="flex-col items-center justify-center">
       <div className="container flex flex-col items-center justify-center gap-12">
@@ -29,6 +52,9 @@ const Home: NextPage = () => {
             <div className="text-lg">See the graph from sensor id #2.</div>
           </Link>
         </div>
+        <div className="flex flex-col items-center justify-center gap-4">
+          <Button onClick={handleNewSession}>New Session →</Button>
+        </div>
         <div className="flex flex-col items-center gap-2">
           <p className="text-center text-base text-white">
             <small>
@@ -43,27 +69,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
-
-  const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
-      </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={sessionData ? () => signOut() : () => signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
-  );
-};

@@ -4,6 +4,8 @@ import { H2 } from "@ui/typography/Heading";
 import { useRouter } from "next/router";
 import { customToast } from "@src/components/Toast";
 import dynamic from "next/dynamic";
+import { Button } from "@src/ui/design/Button";
+import toast from "react-hot-toast";
 
 const SensorChart = dynamic(
   async () => (await import("@components/SensorChart")).SensorChart,
@@ -11,7 +13,8 @@ const SensorChart = dynamic(
 );
 
 const SensorPage = () => {
-  const sensor_id = useRouter().query.sensor_id as string;
+  const router = useRouter();
+  const sensor_id = router.query.sensor_id as string;
 
   const triggerNotification = () => {
     customToast({
@@ -19,6 +22,19 @@ const SensorPage = () => {
       subtitle:
         "The CO2 level in this room is raising. You may want to take a break in 10 minutes.",
     });
+  };
+
+  const handleStopSession = () => {
+    console.log("stop session");
+    // TODO: fetch api to termniate session
+
+    toast("Session stopped", {
+      icon: "✅",
+      style: {
+        borderRadius: "15px",
+      },
+    });
+    router.push("/");
   };
 
   return (
@@ -40,6 +56,9 @@ const SensorPage = () => {
       >
         –––
       </button>
+      <div className="flex flex-col items-center justify-center gap-4">
+        <Button onClick={handleStopSession}>Stop Session</Button>
+      </div>
     </Layout>
   );
 };
