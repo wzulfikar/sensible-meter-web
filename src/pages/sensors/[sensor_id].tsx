@@ -8,6 +8,7 @@ import { Button } from "@src/ui/design/Button";
 import toast from "react-hot-toast";
 import { useEstimator } from "@src/hooks/useEstimator";
 import { useEffect } from "react";
+import { API_ENDPOINT } from "@src/config";
 
 const SensorChart = dynamic(
   async () => (await import("@components/SensorChart")).SensorChart,
@@ -49,16 +50,32 @@ const SensorPage = () => {
   };
 
   const handleStopSession = () => {
-    console.log("stop session");
-    // TODO: fetch api to termniate session
+    if (!session_id) {
+      router.push("/");
+      return;
+    }
 
-    toast("Session stopped", {
-      icon: "✅",
-      style: {
-        borderRadius: "15px",
-      },
-    });
-    router.push("/");
+    console.log("stopping session..");
+
+    toast.promise(
+      fetch(API_ENDPOINT + "/api/v1/session/terminate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ session: session_id }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("session stopped:", data);
+          router.push("/");
+        }),
+      {
+        loading: "Stopping session...",
+        success: <b>Redirecting..</b>,
+        error: <b>Could not stop session</b>,
+      }
+    );
   };
 
   return (
